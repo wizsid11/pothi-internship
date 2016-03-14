@@ -20,8 +20,13 @@ class listener(StreamListener):
 	def update_count(self,tim):# FUNCTTION TO UPDATE SCORE OF WORDS EVERY 30 SECONDS
 		for word_stamp in self.words_stamp:
 			if(tim-word_stamp[1]>60): # IF WORD NOT SEEN FOR 60 SECONDS REDUCE SCORE BY 1 
-				self.counts[word_stamp[0]]=self.counts[word_stamp[0]]-1
+				try:
+					self.counts[word_stamp[0]]=self.counts[word_stamp[0]]-1
+				except:
+					continue
 		listener.delete_items(self,self.counts)# CALL TO DELETE WORDS FROM CACHE IF SCORE IS LESS THAN ZERO
+
+
 
 
 
@@ -38,16 +43,22 @@ class listener(StreamListener):
 				return 0 
 			k=k+1
 	def delete_items(self,a_dict):# FUNCTION TO DELETE WORD FROM CACHE IF SCORE FALLS BELOW ZERO
+		#del_word=list()
 		for k,v in a_dict.items():
 			if v<0:
-				del a_dict[k]
-	def print_items(self,a_dict):# FUNCTION TO PRINT WORDS IN CACHE EVERY 60 SECONDS
+				try:
+
+					del a_dict[k]
+				except:
+					continue
+
+	def print_items(self):# FUNCTION TO PRINT WORDS IN CACHE EVERY 60 SECONDS
 		lst=list()
-		for word,count in a_dict.items():
+		for word,count in self.counts.items():
 			lst.append((count,word))
 		lst.sort(reverse=True)
 		for count,word in lst:
-			if(count>1):
+			if count>1:
 				print count,word # PRINTS THE WORDS WITH THE HIGHEST SCORE FIRST AND SO ON
 	def on_data(self, data):
 		all_data = json.loads(data)
@@ -61,8 +72,6 @@ class listener(StreamListener):
 			listener.n=2
 		if(listener.n==3):
 			for word in words:
-
-	
 				num=listener.check_word(self,word,t)
 				if num:
 					listener.words_stamp[num][1]=t
@@ -75,10 +84,10 @@ class listener(StreamListener):
 			tim=time.time()
 			listener.update_count(self,tim)
 			listener.start=time.time()#RESET TIME
-		if(t-listener.start1 >= 60):#CALL TO PRINT WORDS IN CACHE
+		if(t-listener.start1 >= 15):#CALL TO PRINT WORDS IN CACHE
 			listener.start1=time.time()#RESET TIME
 			
-			listener.print_items(self,listener.counts)
+			listener.print_items(self)
 			print("Wait for sometime")
 	def on_error(self, status):
 	    print status
