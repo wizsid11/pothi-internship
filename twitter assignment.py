@@ -63,7 +63,11 @@ class listener(StreamListener):
 	def on_data(self, data):
 		all_data = json.loads(data)
 		t=time.time()
-		tweet = all_data["text"]
+		if("text" in all_data):
+			
+			tweet = all_data["text"]
+		else:
+			return True
 		words=tweet.split()
 		
 		if(listener.n==1):
