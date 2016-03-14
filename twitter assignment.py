@@ -51,6 +51,9 @@ class listener(StreamListener):
 					del a_dict[k]
 				except:
 					continue
+			for word_stamp in self.words_stamp:
+				if word_stamp[0]==k:
+					self.words_stamp.remove(word_stamp)
 
 	def print_items(self):# FUNCTION TO PRINT WORDS IN CACHE EVERY 60 SECONDS
 		lst=list()
