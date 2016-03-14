@@ -79,7 +79,10 @@ class listener(StreamListener):
 					listener.words_stamp.append([word,t])
 		listener.n=3
 		for word in words:
-			listener.counts[word] = listener.counts.get(word,0) + 1
+			try:
+				listener.counts[word] = listener.counts.get(word,0) + 1
+			except:
+				continue
 		if(t-listener.start >= 30):#CALL TO UPDATE SCORE
 			tim=time.time()
 			listener.update_count(self,tim)
