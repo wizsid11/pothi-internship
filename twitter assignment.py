@@ -84,7 +84,7 @@ class listener(StreamListener):
 			tim=time.time()
 			listener.update_count(self,tim)
 			listener.start=time.time()#RESET TIME
-		if(t-listener.start1 >= 15):#CALL TO PRINT WORDS IN CACHE
+		if(t-listener.start1 >= 60):#CALL TO PRINT WORDS IN CACHE
 			listener.start1=time.time()#RESET TIME
 			
 			listener.print_items(self)
