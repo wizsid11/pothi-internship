@@ -91,7 +91,7 @@ class listener(StreamListener):
 				for key,val in listener.counts.items():
 					if val==0:
 						del listener.counts[key]
-						for word_stamp in words_stamp:
+						for word_stamp in listener. words_stamp:
 							if word_stamp[0]==key:
 								words_stamp.remove(word_stamp)
 				if (len(listener.counts)==listener.size):
