@@ -101,10 +101,10 @@ class listener(StreamListener):
 				listener.counts[word] = listener.counts.get(word,0) + 1# UPDATES SCORE +1 EVERY TIME IT SEES A WORD
 			except:
 				continue
-		if(t-listener.start >=15):#CALL TO UPDATE SCORE
+		if(t-listener.start >=30):#CALL TO UPDATE SCORE
 			listener.update_count(self)
 			listener.start=time.time()#RESET TIME
-		if(t-listener.start1 >=30):#CALL TO PRINT WORDS IN CACHE
+		if(t-listener.start1 >=60):#CALL TO PRINT WORDS IN CACHE
 			listener.start1=time.time()#RESET TIME
 			listener.print_items(self)
 			print("Wait for sometime")
