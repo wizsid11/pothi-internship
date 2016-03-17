@@ -15,51 +15,18 @@ class listener(StreamListener):
 	counts=dict()
 	start=time.time()
 	start1=time.time()
-	words_stamp=list()
-	n=1
-	size=500
+	size=50
 	def update_count(self):# FUNCTTION TO UPDATE SCORE OF WORDS EVERY 30 SECONDS
-		for word_stamp in self.words_stamp:
-			if(time.time()-word_stamp[1]>60): # IF WORD NOT SEEN FOR 60 SECONDS REDUCE SCORE BY 1 
-				try:
-					self.counts[word_stamp[0]]=self.counts[word_stamp[0]]-1
-				except:
-					continue
-		listener.delete_items(self,self.counts)# CALL TO DELETE WORDS FROM CACHE IF SCORE IS LESS THAN ZERO
-
-
-
-
-
-	def check_word(self,word):# FUNCTION TO CHECK IF WORD ALREADY EXISTS IN CACHE,IF IT DOES IT RETURNS THE LOCATION OF THE WORD 
-		k=0
-		for word_stamp in self.words_stamp:
-			
-			if word==word_stamp[0]:
-				if (k==0):
-					self.words_stamp[0][1]=time.time()
-				else:
-					return k
-			else:
-				return 0 
-			k=k+1
-	def delete_items(self,a_dict):# FUNCTION TO DELETE WORD FROM CACHE IF SCORE FALLS BELOW ZERO
-		#del_word=list()
-		for k,v in a_dict.items():
-			if v<0:
-				try:
-
-					del a_dict[k]
-				except:
-					continue
-				for word_stamp in self.words_stamp:
-					if word_stamp[0]==k:
-						self.words_stamp.remove(word_stamp)
+		for word in listener.counts.keys():
+				if(time.time() - listener.counts[word][1] >= 60):	
+					listener.counts[word][0] = listener.counts[word][0] - 1
+					if(listener.counts[word][0] < 0):		
+						del listener.counts[word]
 
 	def print_items(self):# FUNCTION TO PRINT WORDS IN CACHE EVERY 60 SECONDS
 		lst=list()
-		for word,count in self.counts.items():
-			lst.append((count,word))
+		for word in listener.counts.keys():		
+			lst.append((listener.counts[word][0],word))
 		lst.sort(reverse=True)
 		for count,word in lst:
 			if count>1:
@@ -73,32 +40,15 @@ class listener(StreamListener):
 		else:
 			return True
 		words=tweet.split()
-		
-		if(listener.n==1):
-			for word in words:
-				listener.words_stamp.append([word,time.time()])
-			listener.n=2
-		if(listener.n==3):
-			for word in words:
-				num=listener.check_word(self,word)
-				if num:
-					listener.words_stamp[num][1]=time.time()
-				else:
-					listener.words_stamp.append([word,time.time()])
-		listener.n=3
-		for word in words:
-			if (len(listener.counts)==listener.size):
-				for key,val in listener.counts.items():
-					if val==0:
-						del listener.counts[key]
-						for word_stamp in listener. words_stamp:
-							if word_stamp[0]==key:
-								words_stamp.remove(word_stamp)
-				if (len(listener.counts)==listener.size):
-					break
+		for word in words:	
 
 			try:
-				listener.counts[word] = listener.counts.get(word,0) + 1# UPDATES SCORE +1 EVERY TIME IT SEES A WORD
+			   	if(word in listener.counts):
+
+					listener.counts[word][0] = listener.counts[word][0] + 1
+					listener.counts[word][1] = time.time()
+				else:							
+					listener.counts[word] = [1, time.time()]	
 			except:
 				continue
 		if(t-listener.start >=30):#CALL TO UPDATE SCORE
