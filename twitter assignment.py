@@ -24,8 +24,8 @@ class listener(StreamListener):
 		for word in listener.counts.keys():
 				if(time.time() - listener.counts[word][1] >= 60):	
 					listener.counts[word][0] = listener.counts[word][0] - 1
-					if(listener.counts[word][0] < 0):		
-						del listener.counts[word]
+				if(listener.counts[word][0] < 0):		
+					del listener.counts[word]
 
 	def print_items(self):# FUNCTION TO PRINT WORDS IN CACHE EVERY 60 SECONDS
 		lst=list()
