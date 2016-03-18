@@ -16,10 +16,10 @@ class listener(StreamListener):
 	start=time.time()
 	start1=time.time()
 	size=50
-	def check_items(self): #uncomment this 
-		for word in listener.counts.keys(): #uncomment this
-			if(time.time()-listener.counts[word][1]>=10): #uncomment this
-				listener.counts[word][2] = True #uncomment this
+	def check_items(self): 
+		for word in listener.counts.keys(): 
+			if(time.time()-listener.counts[word][1]>=60): 
+				listener.counts[word][2] = True 
 
 	def del_unnecessary_items(self):
 		for word in listener.counts.keys():
@@ -39,7 +39,7 @@ class listener(StreamListener):
 			lst.append((listener.counts[word][0],word))
 		lst.sort(reverse=True)
 		for count,word in lst:
-			if count>4:
+			if count>1:
 				print count,word # PRINTS THE WORDS WITH THE HIGHEST SCORE FIRST AND SO ON
 	def on_data(self, data):
 		all_data = json.loads(data)
@@ -63,11 +63,11 @@ class listener(StreamListener):
 			except:
 				continue
 		listener.del_unnecessary_items(self)
-		listener.check_items(self) #uncomment this
-		if(t-listener.start >=10):#CALL TO UPDATE SCORE
+		listener.check_items(self)
+		if(t-listener.start >=30):#CALL TO UPDATE SCORE
 			listener.update_count(self)
 			listener.start=time.time()#RESET TIME
-		if(t-listener.start1 >=15):#CALL TO PRINT WORDS IN CACHE
+		if(t-listener.start1 >=60):#CALL TO PRINT WORDS IN CACHE
 			listener.start1=time.time()#RESET TIME
 			listener.print_items(self)
 			print("Wait for sometime")
