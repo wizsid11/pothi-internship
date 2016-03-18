@@ -29,7 +29,7 @@ class listener(StreamListener):
 		for word in listener.counts.keys():
 				if(listener.counts[word][2]):	
 					listener.counts[word][0] = listener.counts[word][0] - 1
-					listener.counts[word][2] = False #Uncomment this
+					listener.counts[word][2] = False
 				if(listener.counts[word][0] < 0):		
 					del listener.counts[word]
 
