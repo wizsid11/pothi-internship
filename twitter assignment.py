@@ -16,9 +16,13 @@ class listener(StreamListener):
 	start=time.time()
 	start1=time.time()
 	size=50
+	def del_unnecessary_items(self):# FUNTION TO DELETE ITEMS WHOSE SCORE IS LESS THAN ZERO
+		for word in listener.counts.keys():
+			if(listener.counts[word][0] < 0):
+				del listener.counts[word]
 	def update_count(self):# FUNCTTION TO UPDATE SCORE OF WORDS EVERY 30 SECONDS
 		for word in listener.counts.keys():
-				if(time.time() - listener.counts[word][1] >= 60):	
+				if(time.time() - listener.counts[word][1] >= 10):	
 					listener.counts[word][0] = listener.counts[word][0] - 1
 					if(listener.counts[word][0] < 0):		
 						del listener.counts[word]
@@ -29,14 +33,14 @@ class listener(StreamListener):
 			lst.append((listener.counts[word][0],word))
 		lst.sort(reverse=True)
 		for count,word in lst:
-			if count>1:
+			if count>4:
 				print count,word # PRINTS THE WORDS WITH THE HIGHEST SCORE FIRST AND SO ON
 	def on_data(self, data):
 		all_data = json.loads(data)
 		t=time.time()
 		if("text" in all_data):
 			
-			tweet = all_data["text"]
+			tweet = all_data["text"].encode('ascii','ignore')
 		else:
 			return True
 		words=tweet.split()
@@ -51,10 +55,11 @@ class listener(StreamListener):
 					listener.counts[word] = [1, time.time()]	
 			except:
 				continue
-		if(t-listener.start >=30):#CALL TO UPDATE SCORE
+		listener.del_unnecessary_items(self)
+		if(t-listener.start >=10):#CALL TO UPDATE SCORE
 			listener.update_count(self)
 			listener.start=time.time()#RESET TIME
-		if(t-listener.start1 >=60):#CALL TO PRINT WORDS IN CACHE
+		if(t-listener.start1 >=15):#CALL TO PRINT WORDS IN CACHE
 			listener.start1=time.time()#RESET TIME
 			listener.print_items(self)
 			print("Wait for sometime")
