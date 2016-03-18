@@ -22,7 +22,7 @@ class listener(StreamListener):
 				del listener.counts[word]
 	def update_count(self):# FUNCTTION TO UPDATE SCORE OF WORDS EVERY 30 SECONDS
 		for word in listener.counts.keys():
-				if(time.time() - listener.counts[word][1] >= 10):	
+				if(time.time() - listener.counts[word][1] >= 60):	
 					listener.counts[word][0] = listener.counts[word][0] - 1
 					if(listener.counts[word][0] < 0):		
 						del listener.counts[word]
